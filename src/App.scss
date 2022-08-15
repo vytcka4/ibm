@@ -1,0 +1,61 @@
+button {
+  width: 4rem;
+  height: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+}
+
+.form-cotainer {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 20vh;
+}
+
+.App {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.suggestion-container {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+  max-height: 20vh;
+  width: 100%;
+}
+
+.suggestion-container p {
+  width: 50%;
+}
+
+.suggestions-control {
+  overflow-y: scroll;
+  max-height: 35vh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar-track {
+  border: 5px solid white;
+  // border color does not support transparent on scrollbar
+  // border-color: transparent;
+  background-color: #b2bec3;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+  background-color: #dfe6e9;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #74b9ff;
+  border-radius: 10px;
+}
