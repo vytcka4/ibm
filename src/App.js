@@ -1,16 +1,21 @@
 import "./App.scss";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Diagram from "./components/Diagram";
 
 function App() {
   let url;
+  let candleUrl;
   const apiKey = "cbrqhjaad3idk2bmtfp0";
-  const [enteredStock, setEnteredStock] = useState([]);
+  const [enteredStock, setEnteredStock] = useState("");
   const [companyProfileData, setCompanyProfileData] = useState({});
   const [fetched, setfetched] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const [allStockCodes, setAllStockCodes] = useState([]);
+  const [fromDateValue, setFromDateValue] = useState("");
+  const [toDateValue, setToDateValue] = useState("");
+  const [allprices, setAllprices] = useState([]);
 
   useEffect(() => {
     const getAllStockCodes = async () => {
@@ -43,6 +48,15 @@ function App() {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
+
+    const fromDate = new Date(fromDateValue);
+    const toDate = new Date(toDateValue);
+    const unixTimestampFrom = Math.floor(fromDate.getTime() / 1000);
+    const unixTimestampTo = Math.floor(toDate.getTime() / 1000);
+    if (unixTimestampTo - unixTimestampFrom <= 0) {
+      return;
+    }
+
     url = `https://finnhub.io/api/v1/stock/profile2?symbol=${enteredStock}&token=${apiKey}`;
     axios
       .get(url)
@@ -53,9 +67,27 @@ function App() {
           currency: response.data.currency,
           url: response.data.weburl,
         });
-        setfetched(true);
       })
       .catch((er) => {});
+
+    candleUrl = `https://finnhub.io/api/v1/stock/candle?symbol=${enteredStock}&resolution=D&from=${unixTimestampFrom}&to=${unixTimestampTo}&token=${apiKey}`;
+    axios.get(candleUrl).then((response) => {
+      console.log(response);
+      const unixTimeStamps = response.data.t;
+      const prices = response.data.c;
+      let alldates = [];
+
+      unixTimeStamps.map((entries) => {
+        const date = new Date(entries * 1000).toLocaleDateString("en-GB");
+        return alldates.push(date);
+      });
+
+      const dataForDiagram = prices.map((price, index) => {
+        return { [alldates[index]]: price };
+      });
+    });
+
+    setfetched(true);
   };
 
   return (
@@ -63,16 +95,26 @@ function App() {
       <div className="App">
         <form onSubmit={onSubmitHandler}>
           <div className="form-container">
-            <label for="symbol">company name</label>
+            <label htmlFor="symbol">company name</label>
             <input
               minLength="1"
               type="text"
               onChange={onChangeSymbolHandler}
             ></input>
-            <label for="startDate">Start date: </label>
-            <input type="date"></input>
-            <label for="EndDate">End date: </label>
-            <input type="date"></input>
+            <label htmlFor="startDate">Start date: </label>
+            <input
+              type="date"
+              onChange={(e) => {
+                return setFromDateValue(e.target.value);
+              }}
+            ></input>
+            <label htmlFor="EndDate">End date: </label>
+            <input
+              type="date"
+              onChange={(e) => {
+                return setToDateValue(e.target.value);
+              }}
+            ></input>
             <div className="suggestions-control">
               {suggestions &&
                 suggestions.map((suggestions, key) => {
@@ -87,15 +129,7 @@ function App() {
           </div>
           <button> click</button>
         </form>
-
-        {fetched && (
-          <ul>
-            <li>{companyProfileData.name}</li>
-            <li>{companyProfileData.currency}</li>
-            <li>{companyProfileData.country}</li>
-            <li>{companyProfileData.url}</li>
-          </ul>
-        )}
+        {fetched && <Diagram data={allprices} />}
       </div>
     )
   );
