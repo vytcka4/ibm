@@ -130,6 +130,15 @@ function App() {
     }
     getPrices();
 
+    // axios
+    //   .post("http://localhost:8080", {
+    //     name: companyProfileData.name,
+    //     prices: allPricesData,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+
     setErrorMessage("");
     setfetched(true);
   }
