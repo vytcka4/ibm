@@ -1,6 +1,6 @@
 import "./App.scss";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import Diagram from "./components/Diagram";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
   const [allPricesData, setAllPricesData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getAllStockCodes = async () => {
       try {
         const response = await axios.get(
