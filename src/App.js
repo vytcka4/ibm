@@ -10,7 +10,6 @@ function App() {
   const [enteredStock, setEnteredStock] = useState("");
   const [companyProfileData, setCompanyProfileData] = useState({});
   const [fetched, setfetched] = useState(false);
-  const [isLoading, setisLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const [allStockCodes, setAllStockCodes] = useState([]);
   const [fromDateValue, setFromDateValue] = useState("");
@@ -25,7 +24,6 @@ function App() {
           `https://finnhub.io/api/v1/stock/symbol?exchange=US&token=${apiKey}`
         );
         setAllStockCodes(response.data);
-        setisLoading(false);
       } catch (err) {
         console.error(err);
       }
@@ -144,61 +142,59 @@ function App() {
   }
 
   return (
-    !isLoading && (
-      <div className="App">
-        <form onSubmit={onSubmitHandler}>
-          <div className="form-container">
-            {errorMessage && <p>{errorMessage}</p>}
-            <label htmlFor="symbol">company name</label>
-            <input
-              required
-              minLength="1"
-              type="text"
-              maxLength="36"
-              onChange={onChangeSymbolHandler}
-              value={enteredStock}
-            ></input>
-            <label htmlFor="startDate">Start date: </label>
-            <input
-              required
-              type="date"
-              onChange={(e) => {
-                setErrorMessage("");
-                return setFromDateValue(e.target.value);
-              }}
-            ></input>
-            <label htmlFor="EndDate">End date: </label>
-            <input
-              required
-              type="date"
-              onChange={(e) => {
-                setErrorMessage("");
-                return setToDateValue(e.target.value);
-              }}
-            ></input>
-            <div className="suggestions-control">
-              {suggestions &&
-                suggestions.map((suggestion, key) => {
-                  return (
-                    <div
-                      className="suggestion-container"
-                      key={key}
-                      onClick={() => {
-                        onSuggestionsHandler(suggestion.symbol);
-                      }}
-                    >
-                      <p>{suggestion.symbol}</p>
-                      <p>{suggestion.description}</p>
-                    </div>
-                  );
-                })}
-            </div>
+    <div className="App">
+      <form onSubmit={onSubmitHandler}>
+        <div className="form-container">
+          {errorMessage && <p>{errorMessage}</p>}
+          <label htmlFor="symbol">company name</label>
+          <input
+            required
+            minLength="1"
+            type="text"
+            maxLength="36"
+            onChange={onChangeSymbolHandler}
+            value={enteredStock}
+          ></input>
+          <label htmlFor="startDate">Start date: </label>
+          <input
+            required
+            type="date"
+            onChange={(e) => {
+              setErrorMessage("");
+              return setFromDateValue(e.target.value);
+            }}
+          ></input>
+          <label htmlFor="EndDate">End date: </label>
+          <input
+            required
+            type="date"
+            onChange={(e) => {
+              setErrorMessage("");
+              return setToDateValue(e.target.value);
+            }}
+          ></input>
+          <div className="suggestions-control">
+            {suggestions &&
+              suggestions.map((suggestion, key) => {
+                return (
+                  <div
+                    className="suggestion-container"
+                    key={key}
+                    onClick={() => {
+                      onSuggestionsHandler(suggestion.symbol);
+                    }}
+                  >
+                    <p>{suggestion.symbol}</p>
+                    <p>{suggestion.description}</p>
+                  </div>
+                );
+              })}
           </div>
-          <button>Search</button>
-        </form>
-        {fetched && <Diagram data={allPricesData} />}
-      </div>
-    )
+        </div>
+        <button>Search</button>
+      </form>
+      {fetched && <Diagram data={allPricesData} />}
+    </div>
   );
 }
 
