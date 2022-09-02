@@ -1,6 +1,6 @@
 import "./App.scss";
 import axios from "axios";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import Diagram from "./components/Diagram";
 
 function App() {
@@ -127,16 +127,6 @@ function App() {
         });
     }
     getPrices();
-
-    // axios
-    //   .post("http://localhost:8080", {
-    //     name: companyProfileData.name,
-    //     prices: allPricesData,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
-
     setErrorMessage("");
     setfetched(true);
   }
