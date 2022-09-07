@@ -1,7 +1,11 @@
 import "./tile.scss";
 
 function tiles() {
-  return <div></div>;
+  return (
+    <div>
+      <span></span>
+    </div>
+  );
 }
 
 export default tiles;
