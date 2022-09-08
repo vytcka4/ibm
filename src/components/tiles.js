@@ -4,6 +4,7 @@ function tiles() {
   return (
     <div>
       <span></span>
+      <span>
     </div>
   );
 }
